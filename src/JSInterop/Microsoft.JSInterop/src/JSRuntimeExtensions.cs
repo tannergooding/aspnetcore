@@ -21,15 +21,14 @@ namespace Microsoft.JSInterop
         /// <param name="identifier">An identifier for the function to invoke. For example, the value <c>"someScope.someFunction"</c> will invoke the function <c>window.someScope.someFunction</c>.</param>
         /// <param name="args">JSON-serializable arguments.</param>
         /// <returns>A <see cref="ValueTask"/> that represents the asynchronous invocation operation.</returns>
-        public static ValueTask InvokeVoidAsync(this IJSRuntime jsRuntime, string identifier, params object[] args)
+        public static async ValueTask InvokeVoidAsync(this IJSRuntime jsRuntime, string identifier, params object[] args)
         {
             if (jsRuntime is null)
             {
                 throw new ArgumentNullException(nameof(jsRuntime));
             }
 
-            var valueTask = jsRuntime.InvokeAsync<object>(identifier, args);
-            return LinkerSafeValueTaskInvoker.InvokeVoidAsync(valueTask);
+            await jsRuntime.InvokeAsync<object>(identifier, args);
         }
 
         /// <summary>
@@ -87,15 +86,14 @@ namespace Microsoft.JSInterop
         /// </param>
         /// <param name="args">JSON-serializable arguments.</param>
         /// <returns>A <see cref="ValueTask"/> that represents the asynchronous invocation operation.</returns>
-        public static ValueTask InvokeVoidAsync(this IJSRuntime jsRuntime, string identifier, CancellationToken cancellationToken, params object[] args)
+        public static async ValueTask InvokeVoidAsync(this IJSRuntime jsRuntime, string identifier, CancellationToken cancellationToken, params object[] args)
         {
             if (jsRuntime is null)
             {
                 throw new ArgumentNullException(nameof(jsRuntime));
             }
 
-            var valueTask = jsRuntime.InvokeAsync<object>(identifier, cancellationToken, args);
-            return LinkerSafeValueTaskInvoker.InvokeVoidAsync(valueTask);
+            await jsRuntime.InvokeAsync<object>(identifier, cancellationToken, args);
         }
 
         /// <summary>
@@ -106,25 +104,7 @@ namespace Microsoft.JSInterop
         /// <param name="timeout">The duration after which to cancel the async operation. Overrides default timeouts (<see cref="JSRuntime.DefaultAsyncTimeout"/>).</param>
         /// <param name="args">JSON-serializable arguments.</param>
         /// <returns>A <see cref="ValueTask"/> that represents the asynchronous invocation operation.</returns>
-        public static ValueTask<TValue> InvokeAsync<[DynamicallyAccessedMembers(JsonSerialized)] TValue>(this IJSRuntime jsRuntime, string identifier, TimeSpan timeout, params object?[]? args)
-        {
-            if (jsRuntime is null)
-            {
-                throw new ArgumentNullException(nameof(jsRuntime));
-            }
-
-            return LinkerSafeValueTaskInvoker.InvokeAsync<TValue>(jsRuntime, identifier, timeout, args);
-        }
-
-        /// <summary>
-        /// Invokes the specified JavaScript function asynchronously.
-        /// </summary>
-        /// <param name="jsRuntime">The <see cref="IJSRuntime"/>.</param>
-        /// <param name="identifier">An identifier for the function to invoke. For example, the value <c>"someScope.someFunction"</c> will invoke the function <c>window.someScope.someFunction</c>.</param>
-        /// <param name="timeout">The duration after which to cancel the async operation. Overrides default timeouts (<see cref="JSRuntime.DefaultAsyncTimeout"/>).</param>
-        /// <param name="args">JSON-serializable arguments.</param>
-        /// <returns>A <see cref="ValueTask"/> that represents the asynchronous invocation operation.</returns>
-        public static ValueTask InvokeVoidAsync(this IJSRuntime jsRuntime, string identifier, TimeSpan timeout, params object[] args)
+        public static async ValueTask<TValue> InvokeAsync<[DynamicallyAccessedMembers(JsonSerialized)] TValue>(this IJSRuntime jsRuntime, string identifier, TimeSpan timeout, params object?[]? args)
         {
             if (jsRuntime is null)
             {
@@ -134,25 +114,28 @@ namespace Microsoft.JSInterop
             using var cancellationTokenSource = timeout == Timeout.InfiniteTimeSpan ? null : new CancellationTokenSource(timeout);
             var cancellationToken = cancellationTokenSource?.Token ?? CancellationToken.None;
 
-            var valueTask = jsRuntime.InvokeAsync<object>(identifier, cancellationToken, args);
-            return LinkerSafeValueTaskInvoker.InvokeVoidAsync(valueTask);
+            return await jsRuntime.InvokeAsync<TValue>(identifier, cancellationToken, args);
         }
 
-        [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2091", Justification = "Linker does not propogate annotations to generated state machine. https://github.com/mono/linker/issues/1403")]
-        private static class LinkerSafeValueTaskInvoker
+        /// <summary>
+        /// Invokes the specified JavaScript function asynchronously.
+        /// </summary>
+        /// <param name="jsRuntime">The <see cref="IJSRuntime"/>.</param>
+        /// <param name="identifier">An identifier for the function to invoke. For example, the value <c>"someScope.someFunction"</c> will invoke the function <c>window.someScope.someFunction</c>.</param>
+        /// <param name="timeout">The duration after which to cancel the async operation. Overrides default timeouts (<see cref="JSRuntime.DefaultAsyncTimeout"/>).</param>
+        /// <param name="args">JSON-serializable arguments.</param>
+        /// <returns>A <see cref="ValueTask"/> that represents the asynchronous invocation operation.</returns>
+        public static async ValueTask InvokeVoidAsync(this IJSRuntime jsRuntime, string identifier, TimeSpan timeout, params object[] args)
         {
-            public static async ValueTask<TValue> InvokeAsync<[DynamicallyAccessedMembers(JsonSerialized)] TValue>(IJSRuntime jsRuntime, string identifier, TimeSpan timeout, params object?[]? args)
+            if (jsRuntime is null)
             {
-                using var cancellationTokenSource = timeout == Timeout.InfiniteTimeSpan ? null : new CancellationTokenSource(timeout);
-                var cancellationToken = cancellationTokenSource?.Token ?? CancellationToken.None;
-
-                return await jsRuntime.InvokeAsync<TValue>(identifier, cancellationToken, args);
+                throw new ArgumentNullException(nameof(jsRuntime));
             }
 
-            public static async ValueTask InvokeVoidAsync(ValueTask<object> valueTask)
-            {
-                await valueTask;
-            }
+            using var cancellationTokenSource = timeout == Timeout.InfiniteTimeSpan ? null : new CancellationTokenSource(timeout);
+            var cancellationToken = cancellationTokenSource?.Token ?? CancellationToken.None;
+
+            await jsRuntime.InvokeAsync<object>(identifier, cancellationToken, args);
         }
     }
 }

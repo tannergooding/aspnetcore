@@ -16,7 +16,6 @@ namespace Microsoft.JSInterop
     /// <summary>
     /// Abstract base class for a JavaScript runtime.
     /// </summary>
-    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2091", Justification = "Linker does not propogate annotations to generated state machine.")]
     public abstract partial class JSRuntime : IJSRuntime
     {
         private long _nextObjectReferenceId = 0; // 0 signals no object, but we increment prior to assignment. The first tracked object should have id 1

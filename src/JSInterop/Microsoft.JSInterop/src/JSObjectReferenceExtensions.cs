@@ -12,7 +12,6 @@ namespace Microsoft.JSInterop
     /// <summary>
     /// Extensions for <see cref="IJSObjectReference"/>.
     /// </summary>
-    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2091", Justification = "Linker does not propogate annotations to generated state machine.")]
     public static class JSObjectReferenceExtensions
     {
         /// <summary>

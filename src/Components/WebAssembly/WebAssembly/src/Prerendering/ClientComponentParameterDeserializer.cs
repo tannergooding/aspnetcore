@@ -20,8 +20,6 @@ namespace Microsoft.AspNetCore.Components
 
         public static WebAssemblyComponentParameterDeserializer Instance { get; } = new WebAssemblyComponentParameterDeserializer(new ComponentParametersTypeCache());
 
-        [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026", Justification = "This pattern is not linker friendly. https://github.com/dotnet/aspnetcore/issues/29946 tracks making parameters linker friendly.")]
-        [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2072", Justification = "This pattern is not linker friendly. https://github.com/dotnet/aspnetcore/issues/29946 tracks making parameters linker friendly.")]
         public ParameterView DeserializeParameters(IList<ComponentParameter> parametersDefinitions, IList<object> parameterValues)
         {
             var parametersDictionary = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);

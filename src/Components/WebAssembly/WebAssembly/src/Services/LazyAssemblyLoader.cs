@@ -50,7 +50,7 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.Services
         {
             if (OperatingSystem.IsBrowser())
             {
-                return ClientLoader.LoadAssembliesInClientAsync((IJSUnmarshalledRuntime)_jsRuntime, _loadedAssemblyCache, assembliesToLoad);
+                return LoadAssembliesInClientAsync(assembliesToLoad);
             }
 
             return LoadAssembliesInServerAsync(assembliesToLoad);
@@ -75,49 +75,47 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.Services
             return Task.FromResult<IEnumerable<Assembly>>(loadedAssemblies);
         }
 
-        [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026", Justification = "Linker does not propogate annotations to generated state machine. https://github.com/mono/linker/issues/1403")]
-        private static class ClientLoader
+        [RequiresUnreferencedCode("Types and members the loaded assemblies depend on might be removed")]
+        private async Task<IEnumerable<Assembly>> LoadAssembliesInClientAsync(IEnumerable<string> assembliesToLoad)
         {
-            [RequiresUnreferencedCode("Types and members the loaded assemblies depend on might be removed")]
-            public static async Task<IEnumerable<Assembly>> LoadAssembliesInClientAsync(IJSUnmarshalledRuntime jsRuntime, HashSet<string> loadedAssemblyCache, IEnumerable<string> assembliesToLoad)
+            // Check to see if the assembly has already been loaded and avoids reloading it if so.
+            // Note: in the future, as an extra precuation, we can call `Assembly.Load` and check
+            // to see if it throws FileNotFound to ensure that an assembly hasn't been loaded
+            // between when the cache of loaded assemblies was instantiated in the constructor
+            // and the invocation of this method.
+            var newAssembliesToLoad = assembliesToLoad.Where(assembly => !_loadedAssemblyCache.Contains(assembly));
+            var loadedAssemblies = new List<Assembly>();
+
+            var jsRuntime = (IJSUnmarshalledRuntime)_jsRuntime;
+
+            var count = (int)await jsRuntime.InvokeUnmarshalled<string[], Task<object>>(
+               GetLazyAssemblies,
+               newAssembliesToLoad.ToArray());
+
+            if (count == 0)
             {
-                // Check to see if the assembly has already been loaded and avoids reloading it if so.
-                // Note: in the future, as an extra precuation, we can call `Assembly.Load` and check
-                // to see if it throws FileNotFound to ensure that an assembly hasn't been loaded
-                // between when the cache of loaded assemblies was instantiated in the constructor
-                // and the invocation of this method.
-                var newAssembliesToLoad = assembliesToLoad.Where(assembly => !loadedAssemblyCache.Contains(assembly));
-                var loadedAssemblies = new List<Assembly>();
-
-                var count = (int)await jsRuntime.InvokeUnmarshalled<string[], Task<object>>(
-                   GetLazyAssemblies,
-                   newAssembliesToLoad.ToArray());
-
-                if (count == 0)
-                {
-                    return loadedAssemblies;
-                }
-
-                var assemblies = jsRuntime.InvokeUnmarshalled<byte[][]>(ReadLazyAssemblies);
-                var pdbs = jsRuntime.InvokeUnmarshalled<byte[][]>(ReadLazyPDBs);
-
-                for (int i = 0; i < assemblies.Length; i++)
-                {
-                    // The runtime loads assemblies into an isolated context by default. As a result,
-                    // assemblies that are loaded via Assembly.Load aren't available in the app's context
-                    // AKA the default context. To work around this, we explicitly load the assemblies
-                    // into the default app context.
-                    var assembly = assemblies[i];
-                    var pdb = pdbs[i];
-                    var loadedAssembly = pdb.Length == 0 ?
-                        AssemblyLoadContext.Default.LoadFromStream(new MemoryStream(assembly)) :
-                        AssemblyLoadContext.Default.LoadFromStream(new MemoryStream(assembly), new MemoryStream(pdb));
-                    loadedAssemblies.Add(loadedAssembly);
-                    loadedAssemblyCache.Add(loadedAssembly.GetName().Name + ".dll");
-                }
-
                 return loadedAssemblies;
             }
+
+            var assemblies = jsRuntime.InvokeUnmarshalled<byte[][]>(ReadLazyAssemblies);
+            var pdbs = jsRuntime.InvokeUnmarshalled<byte[][]>(ReadLazyPDBs);
+
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                // The runtime loads assemblies into an isolated context by default. As a result,
+                // assemblies that are loaded via Assembly.Load aren't available in the app's context
+                // AKA the default context. To work around this, we explicitly load the assemblies
+                // into the default app context.
+                var assembly = assemblies[i];
+                var pdb = pdbs[i];
+                var loadedAssembly = pdb.Length == 0 ?
+                    AssemblyLoadContext.Default.LoadFromStream(new MemoryStream(assembly)) :
+                    AssemblyLoadContext.Default.LoadFromStream(new MemoryStream(assembly), new MemoryStream(pdb));
+                loadedAssemblies.Add(loadedAssembly);
+                _loadedAssemblyCache.Add(loadedAssembly.GetName().Name + ".dll");
+            }
+
+            return loadedAssemblies;
         }
     }
 }
