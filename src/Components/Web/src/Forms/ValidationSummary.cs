@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components.Rendering;
-using static Microsoft.AspNetCore.Internal.LinkerFlags;
 
 namespace Microsoft.AspNetCore.Components.Forms
 {
@@ -61,7 +59,6 @@ namespace Microsoft.AspNetCore.Components.Forms
         }
 
         /// <inheritdoc />
-        [DynamicDependency(BlazorComponent, typeof(ValidationSummary))]
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             // As an optimization, only evaluate the messages enumerable once, and

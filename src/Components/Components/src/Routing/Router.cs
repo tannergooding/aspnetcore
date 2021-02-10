@@ -14,7 +14,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.LegacyRouteMatching;
 using Microsoft.Extensions.Logging;
-using static Microsoft.AspNetCore.Internal.LinkerFlags;
 
 namespace Microsoft.AspNetCore.Components.Routing
 {
@@ -104,7 +103,6 @@ namespace Microsoft.AspNetCore.Components.Routing
         }
 
         /// <inheritdoc />
-        [DynamicDependency(BlazorComponent, typeof(Router))]
         public async Task SetParametersAsync(ParameterView parameters)
         {
             parameters.SetParameterProperties(this);

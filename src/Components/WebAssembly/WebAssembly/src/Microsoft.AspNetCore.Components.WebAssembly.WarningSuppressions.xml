@@ -11,6 +11,12 @@
       <argument>ILLink</argument>
       <argument>IL2026</argument>
       <property name="Scope">member</property>
+      <property name="Target">M:Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHostBuilder.InitializeRegisteredRootComponents(Microsoft.JSInterop.IJSUnmarshalledRuntime)</property>
+    </attribute>
+    <attribute fullname="System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessageAttribute">
+      <argument>ILLink</argument>
+      <argument>IL2026</argument>
+      <property name="Scope">member</property>
       <property name="Target">M:Microsoft.AspNetCore.Components.WebAssembly.Services.LazyAssemblyLoader.&lt;LoadAssembliesInClientAsync&gt;d__8.MoveNext</property>
     </attribute>
     <attribute fullname="System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessageAttribute">

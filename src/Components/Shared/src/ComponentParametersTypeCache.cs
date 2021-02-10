@@ -26,7 +26,7 @@ namespace Microsoft.AspNetCore.Components
             }
         }
 
-        [RequiresUnreferencedCode("This type attempts to load component parameters that may be linked away.")]
+        [RequiresUnreferencedCode("This type attempts to load component parameters that may be trimmed.")]
         private static Type? ResolveType(Key key, Assembly[] assemblies)
         {
             var assembly = assemblies

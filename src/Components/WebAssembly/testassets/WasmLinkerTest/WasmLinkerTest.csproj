@@ -47,7 +47,7 @@
         RootAssemblyNames="@(RootAssemblies)"
         OutputDirectory="$(LibrariesTrimmedArtifactsPath)"
         ReferenceAssemblyPaths="@(RuntimePackAsset);@(ReferencePath->WithMetadataValue('ExternallyResolved', 'true'))"
-        ExtraArgs="$(ILLinkArgs) --verbose"
+        ExtraArgs="$(ILLinkArgs)"
         ToolExe="$(_DotNetHostFileName)"
         ToolPath="$(_DotNetHostDirectory)" />
   </Target>

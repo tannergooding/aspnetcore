@@ -78,7 +78,7 @@ namespace Microsoft.AspNetCore.Components
             return JsonSerializer.Deserialize<ComponentParameter[]>(parametersDefinitions, WebAssemblyComponentSerializationSettings.JsonSerializationOptions)!;
         }
 
-        [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2072:RequiresUnreferencedCode", Justification = "Pattern is not linker safe.")]
+        [RequiresUnreferencedCode("This API attempts to JSON deserialize types which might be trimmed.")]
         public IList<object> GetParameterValues(string parameterValues)
         {
             return JsonSerializer.Deserialize<IList<object>>(parameterValues, WebAssemblyComponentSerializationSettings.JsonSerializationOptions)!;

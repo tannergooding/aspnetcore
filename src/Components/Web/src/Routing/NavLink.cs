@@ -4,10 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Microsoft.AspNetCore.Components.Rendering;
-using static Microsoft.AspNetCore.Internal.LinkerFlags;
 
 namespace Microsoft.AspNetCore.Components.Routing
 {
@@ -161,7 +159,6 @@ namespace Microsoft.AspNetCore.Components.Routing
         }
 
         /// <inheritdoc/>
-        [DynamicDependency(BlazorComponent, typeof(NavLink))]
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "a");

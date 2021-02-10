@@ -5,10 +5,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Rendering;
-using static Microsoft.AspNetCore.Internal.LinkerFlags;
 
 namespace Microsoft.AspNetCore.Components
 {
@@ -59,7 +57,6 @@ namespace Microsoft.AspNetCore.Components
         }
 
         /// <inheritdoc />
-        [DynamicDependency(BlazorComponent, typeof(CascadingValue<>))]
         public Task SetParametersAsync(ParameterView parameters)
         {
             // Implementing the parameter binding manually, instead of just calling
