@@ -25,7 +25,8 @@
     </PropertyGroup>
     <ItemGroup>
       <RootAssemblies Include="@(ReferencePath->HasMetadata('ProjectPath'))" RootMode="visible" />
-      <_ILLinkSuppressionFile Include="$([System.IO.Path]::GetDirectoryName($([System.String]::new('%(RootAssemblies.ProjectPath)'))))\%(FileName).WarningSuppressions.xml" />
+      <_ILLinkSuppressionFile Include="$([System.IO.Path]::GetDirectoryName($([System.String]::new('%(RootAssemblies.ProjectPath)'))))\%(FileName).WarningSuppressions.xml"
+        SuppressionFileName="%(FileName).WarningSuppressions" />
       <ILLinkSuppressionFile Condition="Exists(%(_ILLinkSuppressionFile.Identity))" Include="%(_ILLinkSuppressionFile.Identity)" />
     </ItemGroup>
 
@@ -50,5 +51,29 @@
         ExtraArgs="$(ILLinkArgs)"
         ToolExe="$(_DotNetHostFileName)"
         ToolPath="$(_DotNetHostDirectory)" />
+
+      <ItemGroup Condition="'$(GenerateLinkerWarningSuppressions)' == 'true'">
+        <_UpdatedILLinkSuppressionFile Include="$(LibrariesTrimmedArtifactsPath)\*.WarningSuppressions.xml" />
+        <_UpdatedILLinkSuppressionFile SourcePath="%(FullPath)" />
+      </ItemGroup>
+
+       <JoinItems
+         Left="@(_ILLinkSuppressionFile)"
+         Right="@(_UpdatedILLinkSuppressionFile)"
+         LeftMetadata="*"
+         RightMetadata="SourcePath"
+         LeftKey="SuppressionFileName"
+         RightKey="FileName"
+         ItemSpecToUse="Left">
+
+        <Output TaskParameter="JoinResult" ItemName="_ILLinkFileToUpdate" />
+       </JoinItems>
+
+       <Copy
+        SourceFiles="%(_ILLinkFileToUpdate.SourcePath)"
+        DestinationFiles="%(_ILLinkFileToUpdate.FullPath)"
+        OverwriteReadOnlyFiles="true"
+        Condition="'$(GenerateLinkerWarningSuppressions)' == 'true'" />
+
   </Target>
 </Project>

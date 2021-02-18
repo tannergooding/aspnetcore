@@ -18,7 +18,7 @@ namespace Microsoft.AspNetCore.Components.Web.Virtualization
 
         private DotNetObjectReference<VirtualizeJsInterop>? _selfReference;
 
-        [DynamicDependency(nameof(OnSpacerAfterVisible))]
+        [DynamicDependency(nameof(OnSpacerBeforeVisible))]
         [DynamicDependency(nameof(OnSpacerAfterVisible))]
         public VirtualizeJsInterop(IVirtualizeJsCallbacks owner, IJSRuntime jsRuntime)
         {

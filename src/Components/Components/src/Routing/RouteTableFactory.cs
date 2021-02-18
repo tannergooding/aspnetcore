@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Components.Routing;
@@ -33,7 +34,7 @@ namespace Microsoft.AspNetCore.Components
             return routeTable;
         }
 
-        internal static List<Type> GetRouteableComponents(IEnumerable<Assembly> assemblies)
+        private static List<Type> GetRouteableComponents(IEnumerable<Assembly> assemblies)
         {
             var routeableComponents = new List<Type>();
             foreach (var assembly in assemblies)

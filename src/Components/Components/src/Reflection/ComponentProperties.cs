@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using static Microsoft.AspNetCore.Internal.LinkerFlags;
 
 namespace Microsoft.AspNetCore.Components.Reflection
 {
@@ -159,13 +160,11 @@ namespace Microsoft.AspNetCore.Components.Reflection
             }
         }
 
-        internal static IEnumerable<PropertyInfo> GetCandidateBindableProperties(
-            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)] Type targetType)
+        internal static IEnumerable<PropertyInfo> GetCandidateBindableProperties([DynamicallyAccessedMembers(Component)] Type targetType)
             => MemberAssignment.GetPropertiesIncludingInherited(targetType, _bindablePropertyFlags);
 
         [DoesNotReturn]
-        private static void ThrowForUnknownIncomingParameterName(
-            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)] Type targetType,
+        private static void ThrowForUnknownIncomingParameterName([DynamicallyAccessedMembers(Component)] Type targetType,
             string parameterName)
         {
             // We know we're going to throw by this stage, so it doesn't matter that the following
@@ -220,8 +219,7 @@ namespace Microsoft.AspNetCore.Components.Reflection
         }
 
         [DoesNotReturn]
-        private static void ThrowForMultipleCaptureUnmatchedValuesParameters(
-            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)] Type targetType)
+        private static void ThrowForMultipleCaptureUnmatchedValuesParameters([DynamicallyAccessedMembers(Component)] Type targetType)
         {
             // We don't care about perf here, we want to report an accurate and useful error.
             var propertyNames = targetType
@@ -253,7 +251,7 @@ namespace Microsoft.AspNetCore.Components.Reflection
             private readonly Dictionary<string, PropertySetter> _underlyingWriters;
             private readonly ConcurrentDictionary<string, PropertySetter?> _referenceEqualityWritersCache;
 
-            public WritersForType([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)] Type targetType)
+            public WritersForType([DynamicallyAccessedMembers(Component)] Type targetType)
             {
                 _underlyingWriters = new Dictionary<string, PropertySetter>(StringComparer.OrdinalIgnoreCase);
                 _referenceEqualityWritersCache = new ConcurrentDictionary<string, PropertySetter?>(ReferenceEqualityComparer.Instance);

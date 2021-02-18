@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using static Microsoft.AspNetCore.Internal.LinkerFlags;
 
 namespace Microsoft.AspNetCore.Components.Reflection
 {
     internal class MemberAssignment
     {
         public static IEnumerable<PropertyInfo> GetPropertiesIncludingInherited(
-            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type type,
+            [DynamicallyAccessedMembers(Component)] Type type,
             BindingFlags bindingFlags)
         {
             var dictionary = new Dictionary<string, List<PropertyInfo>>();
