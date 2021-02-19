@@ -125,7 +125,7 @@
     <SystemSecurityPrincipalWindowsVersion>6.0.0-preview.2.21114.2</SystemSecurityPrincipalWindowsVersion>
     <SystemServiceProcessServiceControllerVersion>6.0.0-preview.2.21114.2</SystemServiceProcessServiceControllerVersion>
     <SystemTextEncodingsWebVersion>6.0.0-preview.2.21114.2</SystemTextEncodingsWebVersion>
-    <SystemTextJsonVersion>6.0.0-preview.2.21114.2</SystemTextJsonVersion>
+    <SystemTextJsonVersion>6.0.1-dev</SystemTextJsonVersion>
     <SystemThreadingChannelsVersion>6.0.0-preview.2.21114.2</SystemThreadingChannelsVersion>
     <SystemWindowsExtensionsVersion>6.0.0-preview.2.21114.2</SystemWindowsExtensionsVersion>
     <!-- Only listed explicitly to workaround https://github.com/dotnet/cli/issues/10528 -->

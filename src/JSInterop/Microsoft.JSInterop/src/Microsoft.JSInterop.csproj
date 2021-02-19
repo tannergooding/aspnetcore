@@ -7,9 +7,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsAspNetCoreApp>true</IsAspNetCoreApp>
     <Nullable>enable</Nullable>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup>
     <Reference Include="System.Text.Json" />
   </ItemGroup>
 

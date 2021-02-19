@@ -7,10 +7,13 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsShippingPackage>true</IsShippingPackage>
     <Nullable>enable</Nullable>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="Microsoft.JSInterop" />
+    <Reference Include="System.Text.Json" />
   </ItemGroup>
 
   <ItemGroup>

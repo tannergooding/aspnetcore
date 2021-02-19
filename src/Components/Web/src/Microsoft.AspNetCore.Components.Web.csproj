@@ -7,6 +7,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RootNamespace>Microsoft.AspNetCore.Components</RootNamespace>
     <Nullable>enable</Nullable>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +17,7 @@
     <Reference Include="Microsoft.Extensions.DependencyInjection" />
     <Reference Include="Microsoft.JSInterop" />
     <Reference Include="System.IO.Pipelines" />
+    <Reference Include="System.Text.Json" />
   </ItemGroup>
 
 </Project>

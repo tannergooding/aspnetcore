@@ -266,7 +266,7 @@
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>c03776bf46f53da3dfc4b35473f1f9a53d5e0264</Sha>
     </Dependency>
-    <Dependency Name="System.Text.Json" Version="6.0.0-preview.2.21114.2">
+    <Dependency Name="System.Text.Json" Version="6.0.1-dev">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>c03776bf46f53da3dfc4b35473f1f9a53d5e0264</Sha>
     </Dependency>
